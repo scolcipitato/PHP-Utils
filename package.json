@@ -4,10 +4,14 @@
 	"description": "Generator of various PHP class function",
 	"version": "1.0.0",
 	"publisher": "scolcipitato",
+	"author": "scolcipitato <matteogozzi03@gmail.com>",
 	"icon": "image/icon.png",
 	"repository": {
         "type": "git",
         "url": "https://git.scolciserver.com/scolcipitato/PHP-Utils"
+    },
+	"bugs": {
+        "url": "https://git.scolciserver.com/scolcipitato/PHP-Utils/-/issues"
     },
 	"engines": {
 		"vscode": "^1.61.0"
@@ -15,17 +19,90 @@
 	"categories": [
 		"Other"
 	],
+	"keywords": [
+        "php",
+        "getter",
+        "getters",
+        "setter",
+        "setters"
+    ],
 	"activationEvents": [
-		"onCommand:PHP-Utils.helloWorld"
+		"onCommand:PHP-Utils.insertPHPGetter",
+		"onCommand:PHP-Utils.insertPHPSetter",
+		"onCommand:PHP-Utils.insertPHPGetterAndSetter",
+		"onCommand:PHP-Utils.cmdProva"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"configuration": {
+			"title": "PHP Utils",
+			"properties": {
+				"PHP-Utils.getterTemplate": {
+					"type": "string",
+					"default": "",
+					"description": "Specifica la cartella in cui e' presente il template per i getter"
+				},
+				"PHP-Utils.setterTemplate": {
+					"type": "string",
+					"default": "",
+					"description": "Specifica la cartella in cui e' presente il template per i setter"
+				}
+			}
+		},
 		"commands": [
 			{
-				"command": "PHP-Utils.helloWorld",
-				"title": "Hello World"
+				"command": "PHP-Utils.insertPHPGetter",
+				"title": "Insert PHP Getter1"
+			},
+			{
+				"command": "PHP-Utils.insertPHPSetter",
+				"title": "Insert PHP Setter1"
+			},
+			{
+				"command": "PHP-Utils.insertPHPGetterAndSetter",
+				"title": "Insert PHP Getter and Setter1"
+			},
+			{
+				"command": "PHP-Utils.cmdProva",
+				"title": "Cmd Prova"
 			}
-		]
+		],
+		"menus": {
+            "commandPalette": [
+                {
+                    "command": "PHP-Utils.insertPHPGetter",
+                    "when": "editorLangId == php"
+                },
+                {
+                    "command": "PHP-Utils.insertPHPSetter",
+                    "when": "editorLangId == php"
+                },
+                {
+                    "command": "PHP-Utils.insertPHPGetterAndSetter",
+                    "when": "editorLangId == php"
+                }
+            ],
+            "editor/context": [
+                {
+                    "when": "resourceLangId == php",
+                    "command": "PHP-Utils.insertPHPGetter",
+                    "alt": "PHP-Utils.insertPHPGetter",
+                    "group": "0_phpGettersSetters@1"
+                },
+                {
+                    "when": "resourceLangId == php",
+                    "command": "PHP-Utils.insertPHPSetter",
+                    "alt": "PHP-Utils.insertPHPSetter",
+                    "group": "0_phpGettersSetters@2"
+                },
+                {
+                    "when": "resourceLangId == php",
+                    "command": "PHP-Utils.insertPHPGetterAndSetter",
+                    "alt": "PHP-Utils.insertPHPGetterAndSetter",
+                    "group": "0_phpGettersSetters@3"
+                }
+            ]
+        }
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
