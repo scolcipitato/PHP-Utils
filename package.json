@@ -37,15 +37,19 @@
 		"commands": [
 			{
 				"command": "PHP-Utils.insertPHPGetter",
-				"title": "Insert PHP Getter1"
+				"title": "Insert PHP Getter"
 			},
 			{
 				"command": "PHP-Utils.insertPHPSetter",
-				"title": "Insert PHP Setter1"
+				"title": "Insert PHP Setter"
 			},
 			{
 				"command": "PHP-Utils.insertPHPGetterAndSetter",
-				"title": "Insert PHP Getter and Setter1"
+				"title": "Insert PHP Getter and Setter"
+			},
+			{
+				"command": "PHP-Utils.insertPHPToString",
+				"title": "Insert PHP toString"
 			},
 			{
 				"command": "PHP-Utils.cmdProva",
@@ -65,6 +69,10 @@
                 {
                     "command": "PHP-Utils.insertPHPGetterAndSetter",
                     "when": "editorLangId == php"
+                },
+				{
+                    "command": "PHP-Utils.insertPHPToString",
+                    "when": "editorLangId == php"
                 }
             ],
             "editor/context": [
@@ -72,19 +80,25 @@
                     "when": "resourceLangId == php",
                     "command": "PHP-Utils.insertPHPGetter",
                     "alt": "PHP-Utils.insertPHPGetter",
-                    "group": "0_phpGettersSetters@1"
+                    "group": "0_PHP-Utils@1"
                 },
                 {
                     "when": "resourceLangId == php",
                     "command": "PHP-Utils.insertPHPSetter",
                     "alt": "PHP-Utils.insertPHPSetter",
-                    "group": "0_phpGettersSetters@2"
+                    "group": "0_PHP-Utils@2"
                 },
                 {
                     "when": "resourceLangId == php",
                     "command": "PHP-Utils.insertPHPGetterAndSetter",
                     "alt": "PHP-Utils.insertPHPGetterAndSetter",
-                    "group": "0_phpGettersSetters@3"
+                    "group": "0_PHP-Utils@3"
+                },
+				{
+                    "when": "resourceLangId == php",
+                    "command": "PHP-Utils.insertPHPToString",
+                    "alt": "PHP-Utils.insertPHPToString",
+                    "group": "0_PHP-Utils@4"
                 }
             ]
         }

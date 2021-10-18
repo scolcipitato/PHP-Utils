@@ -1,4 +1,3 @@
-import { error } from 'console';
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -18,6 +17,11 @@ export function activate(context: vscode.ExtensionContext) {
 	}));
 
 	context.subscriptions.push(
+		vscode.commands.registerCommand('PHP-Utils.insertPHPToString', () => {
+			insert(getToStringTemplate, true);
+	}));
+
+	context.subscriptions.push(
 		vscode.commands.registerCommand('PHP-Utils.cmdProva', () => {
 			// let editor = vscode.window.activeTextEditor;
 			// let selection = editor.selections[0];
@@ -26,37 +30,28 @@ export function activate(context: vscode.ExtensionContext) {
 			// let txt = `Hello ${world}`;
 			// let config = vscode.workspace.getConfiguration('PHP-Utils');
 			vscode.window.showInformationMessage("HI");
+			vscode.window.showInformationMessage(String(getToStringTemplate.name));
 	}));
 }
 
-function insert(fnc: (line: Line) => string) {
+function insert(fnc: ((line: Line) => string) | ((line: Line[]) => string), molteplicy: boolean = false) {
 	let editor = vscode.window.activeTextEditor;
-	if(editor == null) { showErrorMessage('Errore editor'); return;}
-	let line = null;
-	let closingLine: vscode.TextLine = editor.document.lineAt(0);
-	let txt = [];
-	let text = "";
-	let selections = [];
-	for(let selection of editor.selections) {
-		let diff = selection.start.line - selection.end.line;
-		diff *= (diff > 0) ? 1 : -1;
-		for(let i = 0; i <= diff; i++) {
-			selections.push(new vscode.Selection(selection.start.line+i, 0, selection.start.line+i, editor.document.lineAt(selection.start.line+i).text.length));
-		}
+	if(editor == null) { showErrorMessage('Errore editor'); return; }
+
+	let lines = fromSelectionToLines(editor);
+	
+	let template: string;
+	if(molteplicy) {
+		template = renderMultipleTemplate(lines, fnc);
+	} else {
+		template = renderSigleTemplate(lines, fnc);
 	}
-	for(let selection of selections) {
-		txt = editor.document.getText(selection).replace('\r', '').split('\n');
-		for(let ln of txt) {
-			line = new Line(ln);
-			text += fnc(line);
-			if (!text) { showErrorMessage('Template mancante'); return; }
-			
-		}
-	}
+	if (!template) { showErrorMessage('Template mancante'); return; }
 	try {
-		closingLine = closingClassLine(editor);
+		let closingLine = closingClassLine(editor);
 		editor.edit(function(edit: vscode.TextEditorEdit) {
-				edit.replace(new vscode.Position(closingLine.lineNumber, 0), text);
+				if(closingLine == null) { showErrorMessage('Errore line selector'); return;}
+				edit.replace(new vscode.Position(closingLine.lineNumber, 0), template);
 		}).then(
 			success => showInformationMessage('Funzione generata con successo.'),
 			error => showErrorMessage('Errore nel generare le funzioni: ' + error)
@@ -64,6 +59,37 @@ function insert(fnc: (line: Line) => string) {
 	} catch(e) {
 		showErrorMessage(String(e));
 	}
+}
+
+function fromSelectionToLines(editor: vscode.TextEditor) {
+	let diff;
+	let lines = [];
+	let txt = [];
+	for(let selection of editor.selections) {
+		diff = selection.start.line - selection.end.line;
+		diff *= (diff > 0) ? 1 : -1;
+		for(let i = 0; i <= diff; i++) {
+			txt = editor.document.getText(
+				new vscode.Selection(selection.start.line+i, 0, selection.start.line+i, editor.document.lineAt(selection.start.line+i).text.length)
+			).replace('\r', '').split('\n');
+			for(let line of txt) {
+				lines.push(new Line(line));
+			}
+		}
+	}
+	return lines;
+}
+
+function renderSigleTemplate(lines: Line[], fnc: (line: Line) => string) {
+	let res = "";
+	for(let line of lines) {
+		res += fnc(line);
+	}
+	return res;
+}
+
+function renderMultipleTemplate(lines: Line[], fnc: (line: Line[]) => string) {
+	return fnc(lines);
 }
 
 function closingClassLine(editor: vscode.TextEditor) {
@@ -74,6 +100,58 @@ function closingClassLine(editor: vscode.TextEditor) {
 	}
 	throw new Error("Impossibile trovare la linea per inserire il testo");
 }
+
+function showErrorMessage(msg: string) {
+	vscode.window.showErrorMessage("PHP Utils: " + msg);
+}
+
+function showInformationMessage(msg: string) {
+	vscode.window.showInformationMessage("PHP Utils: " + msg);
+}
+
+class Line {
+	visibility: string;
+	type: string;
+	name: string;
+
+	constructor(line: string) {
+		let sepLine = line.trim().replace(/(?:\W)(?<![\$\ ])/g, '').split(' ');
+		const vis = ["public", "private", "protected"]
+		if(vis.indexOf(sepLine[0]) >= 0) {
+			this.visibility = vis[vis.indexOf(sepLine[0])];
+		} else {
+			throw new Error('La riga selezionata non e\' un\'attributo di una classe');
+		}
+		if(sepLine[1].match(/^\$/) === null) {
+			this.type = sepLine[1];
+			this.name = sepLine[2].replace('$', '');
+		} else {
+			this.type = '';
+			this.name = sepLine[1].replace('$', '');
+		}
+	}
+
+	getVisibility() {
+		return this.visibility;
+	}
+
+	getType() {
+		return this.type;
+	}
+
+	getName() {
+		return this.name;
+	}
+
+	getNameCamel() {
+		return this.name[0].toUpperCase() + this.name.substr(1);
+	}
+}
+
+
+/*
+	TEMPLATE FUNCTION
+*/
 
 function getGetterTemplate(line: Line) {
 	let template;
@@ -124,53 +202,36 @@ function getGetterSetterTemplate(line: Line) {
 	return getGetterTemplate(line) + getSetterTemplate(line);
 }
 
-function showErrorMessage(msg: string) {
-	vscode.window.showErrorMessage("PHP Utils: " + msg);
+function getToStringTemplate(lines: Line[]) {
+	let template;
+	let string = '';
+	let type = true;
+	for(let line of lines) {
+		type = line.getType() == '' && type;
+		string += `${line.getNameCamel()}: {$this->${line.getName()}}, `;
+	}
+	string = string.substr(0, string.length-2);
+	if(type) {
+		template = `
+/**
+* @return string
+*/
+public function __toString(): string {
+	return "${string}";
 }
-
-function showInformationMessage(msg: string) {
-	vscode.window.showInformationMessage("PHP Utils: " + msg);
+`
+	} else {
+		template = `
+/**
+ * @return string
+ */
+public function __toString() {
+	return "${string}";
 }
-
-class Line {
-	visibility: string;
-	type: string;
-	name: string;
-
-	constructor(line: string) {
-		let sepLine = line.trim().replace(/(?:\W)(?<![\$\ ])/g, '').split(' ');
-		const vis = ["public", "private", "protected"]
-		if(vis.indexOf(sepLine[0]) >= 0) {
-			this.visibility = vis[vis.indexOf(sepLine[0])];
-		} else {
-			throw new Error('La riga selezionata non e\' un\'attributo di una classe');
-		}
-		if(sepLine[1].match(/^\$/) === null) {
-			this.type = sepLine[1];
-			this.name = sepLine[2].replace('$', '');
-		} else {
-			this.type = '';
-			this.name = sepLine[1].replace('$', '');
-		}
+`
 	}
-
-	getVisibility() {
-		return this.visibility;
-	}
-
-	getType() {
-		return this.type;
-	}
-
-	getName() {
-		return this.name;
-	}
-
-	getNameCamel() {
-		return this.name[0].toUpperCase() + this.name.substr(1);
-	}
+	return template;
 }
-
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
