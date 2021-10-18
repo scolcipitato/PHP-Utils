@@ -2,7 +2,13 @@
 	"name": "PHP-Utils",
 	"displayName": "PHP Utils",
 	"description": "Generator of various PHP class function",
-	"version": "0.0.1",
+	"version": "1.0.0",
+	"publisher": "scolcipitato",
+	"icon": "image/icon.png",
+	"repository": {
+        "type": "git",
+        "url": "https://git.scolciserver.com/scolcipitato/PHP-Utils"
+    },
 	"engines": {
 		"vscode": "^1.61.0"
 	},
