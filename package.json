@@ -24,14 +24,16 @@
         "getter",
         "getters",
         "setter",
-        "setters"
+        "setters",
+		"toString",
+		"construct"
     ],
 	"activationEvents": [
 		"onCommand:PHP-Utils.insertPHPGetter",
 		"onCommand:PHP-Utils.insertPHPSetter",
 		"onCommand:PHP-Utils.insertPHPGetterAndSetter",
 		"onCommand:PHP-Utils.insertPHP__ToString",
-		"onCommand:PHP-Utils.cmdProva"
+		"onCommand:PHP-Utils.insertPHP__construct"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -53,8 +55,8 @@
 				"title": "Insert PHP toString"
 			},
 			{
-				"command": "PHP-Utils.cmdProva",
-				"title": "Cmd Prova"
+				"command": "PHP-Utils.insertPHP__construct",
+				"title": "Insert PHP construct"
 			}
 		],
 		"menus": {
@@ -73,6 +75,10 @@
                 },
 				{
                     "command": "PHP-Utils.insertPHP__ToString",
+                    "when": "editorLangId == php"
+                },
+				{
+                    "command": "PHP-Utils.insertPHP__construct",
                     "when": "editorLangId == php"
                 }
             ],
@@ -100,6 +106,12 @@
                     "command": "PHP-Utils.insertPHP__ToString",
                     "alt": "PHP-Utils.insertPHP__ToString",
                     "group": "0_PHP-Utils@4"
+                },
+				{
+                    "when": "resourceLangId == php",
+                    "command": "PHP-Utils.insertPHP__construct",
+                    "alt": "PHP-Utils.insertPHP__construct",
+                    "group": "0_PHP-Utils@5"
                 }
             ]
         }

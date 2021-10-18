@@ -1,35 +1,29 @@
 # PHP-Utils README
 
-This is the README for your extension "PHP-Utils". After writing up a brief description, we recommend including the following sections.
+Genera e inserice nel file i metodi per le classi PHP
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Per generare i metodi e' necessario posizionarsi sulla stessa linea o selezionare le linee di cui si vogliono genereare i metodi.
 
-For example if there is an image subfolder under your extension project workspace:
+## Installation
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Per installare l'estensione e' necessario aprire il `CMD` o `Powershell` e recorsi nella cartella in cui si e' scaricato il file `.VSIX`, quindi cipiare e incillare il seguente comando
+~~~
+code --install-extension PHP-Utils-X.X.X.vsix
+~~~
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Nessuno.
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+Nada.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+Tutto OK.
 
 ## Release Notes
 
@@ -37,15 +31,7 @@ Users appreciate release notes as you update your extension.
 
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+Initial release
 
 -----------------------------------------------------------------------------------------------------------
 ## Following extension guidelines

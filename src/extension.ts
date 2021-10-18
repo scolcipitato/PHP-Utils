@@ -1,34 +1,32 @@
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-	let commands = [];
-
-	commands.push(
+	context.subscriptions.push(
 		vscode.commands.registerCommand('PHP-Utils.insertPHPGetter', () => {
 			insert(getGetterTemplate);
 	}));
 
-	commands.push(
+	context.subscriptions.push(
 		vscode.commands.registerCommand('PHP-Utils.insertPHPSetter', () => {
 			insert(getSetterTemplate);
 	}));
 
-	commands.push(
+	context.subscriptions.push(
 		vscode.commands.registerCommand('PHP-Utils.insertPHPGetterAndSetter', () => {
 			insert(getGetterSetterTemplate);
 	}));
 
-	commands.push(
+	context.subscriptions.push(
 		vscode.commands.registerCommand('PHP-Utils.insertPHP__ToString', () => {
 			insert(getToStringTemplate, true);
 	}));
 
-	commands.push(
-		vscode.commands.registerCommand('PHP-Utils.idk', () => {
-			insert(getGetterSetterTemplate);
+	context.subscriptions.push(
+		vscode.commands.registerCommand('PHP-Utils.insertPHP__construct', () => {
+			insert(getConstructTemplate, true);
 	}));
 
-	commands.push(
+	context.subscriptions.push(
 		vscode.commands.registerCommand('PHP-Utils.cmdProva', () => {
 			// let editor = vscode.window.activeTextEditor;
 			// let selection = editor.selections[0];
@@ -39,8 +37,6 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInformationMessage("HI");
 			vscode.window.showInformationMessage(String(getToStringTemplate.name));
 	}));
-
-	context.subscriptions.concat(commands);
 }
 
 /**
@@ -221,7 +217,7 @@ function getToStringTemplate(lines: Line[]) {
 	let string = '';
 	let type = true;
 	for(let line of lines) {
-		type = line.getType() == '' && type;
+		type = line.getType() != '' && type;
 		string += `${line.getNameCamel()}: {$this->${line.getName()}}, `;
 	}
 	string = string.substr(0, string.length-2);
@@ -244,6 +240,33 @@ public function __toString() {
 }
 `
 	}
+	return template;
+}
+
+function getConstructTemplate(lines: Line[]) {
+	let string = '';
+	let params = '';
+	let type = true;
+	for(let line of lines) {
+		type = line.getType() != '' && type;
+		string += `\t$this->${line.getName()} = $${line.getName()};\n`;
+	}
+	for(let line of lines) {
+		if(type) {
+			params += `${line.getType()} $${line.getName()}, `;
+		} else {
+			params += `$${line.getName()}, `;
+		}
+	}
+
+	params = params.substr(0, params.length-2);
+
+
+	let template = `
+function __construct(${params}) {
+${string}
+}
+`
 	return template;
 }
 
