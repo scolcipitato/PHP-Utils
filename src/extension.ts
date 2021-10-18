@@ -1,27 +1,34 @@
 import * as vscode from 'vscode';
 
 export function activate(context: vscode.ExtensionContext) {
-	context.subscriptions.push(
+	let commands = [];
+
+	commands.push(
 		vscode.commands.registerCommand('PHP-Utils.insertPHPGetter', () => {
 			insert(getGetterTemplate);
 	}));
 
-	context.subscriptions.push(
+	commands.push(
 		vscode.commands.registerCommand('PHP-Utils.insertPHPSetter', () => {
 			insert(getSetterTemplate);
 	}));
 
-	context.subscriptions.push(
+	commands.push(
 		vscode.commands.registerCommand('PHP-Utils.insertPHPGetterAndSetter', () => {
 			insert(getGetterSetterTemplate);
 	}));
 
-	context.subscriptions.push(
-		vscode.commands.registerCommand('PHP-Utils.insertPHPToString', () => {
+	commands.push(
+		vscode.commands.registerCommand('PHP-Utils.insertPHP__ToString', () => {
 			insert(getToStringTemplate, true);
 	}));
 
-	context.subscriptions.push(
+	commands.push(
+		vscode.commands.registerCommand('PHP-Utils.idk', () => {
+			insert(getGetterSetterTemplate);
+	}));
+
+	commands.push(
 		vscode.commands.registerCommand('PHP-Utils.cmdProva', () => {
 			// let editor = vscode.window.activeTextEditor;
 			// let selection = editor.selections[0];
@@ -32,9 +39,16 @@ export function activate(context: vscode.ExtensionContext) {
 			vscode.window.showInformationMessage("HI");
 			vscode.window.showInformationMessage(String(getToStringTemplate.name));
 	}));
+
+	context.subscriptions.concat(commands);
 }
 
-function insert(fnc: ((line: Line) => string) | ((line: Line[]) => string), molteplicy: boolean = false) {
+/**
+ * 
+ * @param fnc di tipo Line o Line[], non andava se lo mettevo nei parametri :) sorry
+ * @param molteplicy booleano che indica se passare la funzione al singolo o al molteplice
+ */
+function insert(fnc: (line: any) => string, molteplicy: boolean = false) {
 	let editor = vscode.window.activeTextEditor;
 	if(editor == null) { showErrorMessage('Errore editor'); return; }
 
