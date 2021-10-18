@@ -34,21 +34,6 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"configuration": {
-			"title": "PHP Utils",
-			"properties": {
-				"PHP-Utils.getterTemplate": {
-					"type": "string",
-					"default": "",
-					"description": "Specifica la cartella in cui e' presente il template per i getter"
-				},
-				"PHP-Utils.setterTemplate": {
-					"type": "string",
-					"default": "",
-					"description": "Specifica la cartella in cui e' presente il template per i setter"
-				}
-			}
-		},
 		"commands": [
 			{
 				"command": "PHP-Utils.insertPHPGetter",
