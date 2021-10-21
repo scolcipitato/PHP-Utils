@@ -33,7 +33,6 @@ Users appreciate release notes as you update your extension.
 
 ### 1.1.0
 
-Fix issue #2 e aggiunta auto indentazione
 #### Fix:
 
 - Issue #2
