@@ -8,6 +8,8 @@ Per generare i metodi e' necessario posizionarsi sulla stessa linea o selezionar
 
 ## Installation
 
+[Downlaod](https://git.scolciserver.com/scolcipitato/PHP-Utils/-/releases)
+
 Per installare l'estensione e' necessario aprire il `CMD` o `Powershell` e recorsi nella cartella in cui si e' scaricato il file `.VSIX`, quindi cipiare e incillare il seguente comando
 ~~~
 code --install-extension PHP-Utils-X.X.X.vsix
