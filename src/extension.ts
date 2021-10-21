@@ -25,18 +25,6 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('PHP-Utils.insertPHP__construct', () => {
 			insert(getConstructTemplate, true);
 	}));
-
-	context.subscriptions.push(
-		vscode.commands.registerCommand('PHP-Utils.cmdProva', () => {
-			// let editor = vscode.window.activeTextEditor;
-			// let selection = editor.selections[0];
-			// let txt = editor.document.getText(selection);
-			// let world = 'world';
-			// let txt = `Hello ${world}`;
-			// let config = vscode.workspace.getConfiguration('PHP-Utils');
-			vscode.window.showInformationMessage("HI");
-			vscode.window.showInformationMessage(String(getToStringTemplate.name));
-	}));
 }
 
 /**
@@ -125,7 +113,7 @@ class Line {
 	name: string;
 
 	constructor(line: string) {
-		let sepLine = line.trim().replace(/(?:\W)(?<![\$\ ])/g, '').split(' ');
+		let sepLine = line.trim().replace(/(?:\W)(?<![\$\ ])/g, '').replace(/\s{2,}/g, ' ').split(' ');
 		const vis = ["public", "private", "protected"]
 		if(vis.indexOf(sepLine[0]) >= 0) {
 			this.visibility = vis[vis.indexOf(sepLine[0])];
