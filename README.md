@@ -50,9 +50,9 @@ Initial release
 ## Template
 
 I template possono essere usati inserenoli nelle cartelle:
-- Linux: `~/.config/Code/User/phpGettersSetters`
-- OSX: `~/Library/Application Support/Code/User/phpGettersSetters`
-- Windows: `Users\{User}\AppData\Roaming\Code\User\phpGettersSetters`
+- Linux: `~/.config/Code/User/PHP-Utils`
+- OSX: `~/Library/Application Support/Code/User/PHP-Utils`
+- Windows: `Users\{User}\AppData\Roaming\Code\User\PHP-Utils`
 
 I template devono essere contenuti in un je `.js`, fatto questo sara necessario andare nelle impostazioni e cercare per `PHP-Utils`, e infine cambiare le impostazioni desiderate.
 
