@@ -37,6 +37,31 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"configuration": {
+            "title": "PHP-Utls Configuration",
+            "properties": {
+                "PHP-Utils.getterTemplate": {
+                    "type": "string",
+                    "default": "",
+                    "description": "File che fa da template per i getter"
+                },
+				"PHP-Utils.setterTemplate": {
+                    "type": "string",
+                    "default": "",
+                    "description": "File che fa da template per i setter"
+                },
+				"PHP-Utils.toStringTemplate": {
+                    "type": "string",
+                    "default": "",
+                    "description": "File che fa da template per i toString"
+                },
+				"PHP-Utils.constructTemplate": {
+                    "type": "string",
+                    "default": "",
+                    "description": "File che fa da template per i costruttori"
+                }
+            }
+        },
 		"commands": [
 			{
 				"command": "PHP-Utils.insertPHPGetter",

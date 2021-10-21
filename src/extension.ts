@@ -1,6 +1,12 @@
 import * as vscode from 'vscode';
+import path = require('path');
+import os = require('os');
+import fs = require('fs');
+
 
 export function activate(context: vscode.ExtensionContext) {
+	createTemplateDir();
+
 	context.subscriptions.push(
 		vscode.commands.registerCommand('PHP-Utils.insertPHPGetter', () => {
 			insert(getGetterTemplate);
@@ -111,9 +117,11 @@ class Line {
 	visibility: string;
 	type: string;
 	name: string;
+	spacing: string;
 
 	constructor(line: string) {
 		let sepLine = line.trim().replace(/(?:\W)(?<![\$\ ])/g, '').replace(/\s{2,}/g, ' ').split(' ');
+		this.spacing = line.substr(0, /\w/.exec(line)?.index);
 		const vis = ["public", "private", "protected"]
 		if(vis.indexOf(sepLine[0]) >= 0) {
 			this.visibility = vis[vis.indexOf(sepLine[0])];
@@ -144,15 +152,73 @@ class Line {
 	getNameCamel() {
 		return this.name[0].toUpperCase() + this.name.substr(1);
 	}
+
+	getSpacing() {
+		return this.spacing;
+	}
 }
 
+function templateDefaultDir() {
+	let dir: string;
+	switch(process.platform) {
+		case 'darwin':
+			dir = path.join(os.homedir(), 'Library', 'Application Support');
+			break;
+		case 'linux':
+			dir = path.join(os.homedir(), '.config');
+			break;
+		case 'win32':
+			dir = process.env.APPDATA ? process.env.APPDATA : "";
+			break;
+		default:
+			showErrorMessage("Sistema operativo non supportato");
+			throw new Error("Sistema operativo non supportato");
+	}
+	return path.join(dir, 'Code', 'User', 'PHP-Utils');
+
+}
+
+function exists(toTest: string | null) {
+	if(toTest != null) {
+		return fs.existsSync(toTest);
+	}
+	return false;
+}
+
+function getTemplate(file: string) {
+	if(file == "") {
+		return null;
+	}
+	return path.join(templateDefaultDir(), file);
+}
+
+function createTemplateDir() {
+	let templateDir = templateDefaultDir();
+
+	if(!exists(templateDir)) {
+		fs.mkdir(templateDir, (err) => {
+			showErrorMessage("Qualcosa e' andato storto nella creazione delle directory necessarie al corretto funzionamento");
+			throw new Error("Qualcosa e' andato storto nella creazione delle directory necessarie al corretto funzionamento");
+		})
+	}
+}
+
+function getTemplateFileName(type: string) {
+	let res: string | undefined = vscode.workspace.getConfiguration('PHP-Utils').get(type);
+	return res ? res : "";
+}
 
 /*
 	TEMPLATE FUNCTION
 */
 
 function getGetterTemplate(line: Line) {
-	let template;
+	let fileName = getTemplate(getTemplateFileName('getterTemplate'));
+	if(exists(fileName) && fileName) {
+		let fnc = require(fileName);
+		return fnc(line);
+	}
+	let template: string;
 	if(line.getType()) {
 		template = `
 /**
@@ -169,11 +235,16 @@ public function get${line.getNameCamel()}() {
 }
 `
 	}
-	return template;
+	return template.replace(/\n/gm, '\n' + line.getSpacing()).trimEnd() + '\n';
 }
 
 function getSetterTemplate(line: Line) {
-	let template;
+	let fileName = getTemplate(getTemplateFileName('setterTemplate'));
+	if(exists(fileName) && fileName) {
+		let fnc = require(fileName);
+		return fnc(line);
+	}
+	let template: string;
 	if(line.getType()) {
 		template = `
 /**
@@ -193,7 +264,7 @@ public function set${line.getNameCamel()}($${line.getName()}) {
 }
 `
 	}
-	return template;
+	return template.replace(/\n/gm, '\n' + line.getSpacing()).trimEnd() + '\n';
 }
 
 function getGetterSetterTemplate(line: Line) {
@@ -201,7 +272,12 @@ function getGetterSetterTemplate(line: Line) {
 }
 
 function getToStringTemplate(lines: Line[]) {
-	let template;
+	let fileName = getTemplate(getTemplateFileName('toStringTemplate'));
+	if(exists(fileName) && fileName) {
+		let fnc = require(fileName);
+		return fnc(lines);
+	}
+	let template: string;
 	let string = '';
 	let type = true;
 	for(let line of lines) {
@@ -228,10 +304,15 @@ public function __toString() {
 }
 `
 	}
-	return template;
+	return template.replace(/\n/gm, '\n' + lines[0].getSpacing()).trimEnd() + '\n';
 }
 
 function getConstructTemplate(lines: Line[]) {
+	let fileName = getTemplate(getTemplateFileName('constructTemplate'));
+	if(exists(fileName) && fileName) {
+		let fnc = require(fileName);
+		return fnc(lines);
+	}
 	let string = '';
 	let params = '';
 	let type = true;
@@ -255,7 +336,7 @@ function __construct(${params}) {
 ${string}
 }
 `
-	return template;
+	return template.replace(/\n/gm, '\n' + lines[0].getSpacing()).trimEnd() + '\n';
 }
 
 // this method is called when your extension is deactivated
