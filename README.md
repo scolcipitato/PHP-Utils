@@ -1,4 +1,4 @@
-# PHP-Utils README
+# PHP-Utils
 
 Generate and insert methods for PHP classes into the file
 
