@@ -1,35 +1,42 @@
 # PHP-Utils README
 
-Genera e inserice nel file i metodi per le classi PHP
+Generate and insert methods for PHP classes into the file
 
 ## Features
 
-Per generare i metodi e' necessario posizionarsi sulla stessa linea o selezionare le linee di cui si vogliono genereare i metodi.
+To generate the methods it is necessary to position yourself on the same line or select the lines whose methods you want to generate.
 
 ## Installation
 
-[Downlaod](https://git.scolciserver.com/scolcipitato/PHP-Utils/-/releases)
-
-Per installare l'estensione e' necessario aprire il `CMD` o `Powershell` e recorsi nella cartella in cui si e' scaricato il file `.VSIX`, quindi cipiare e incillare il seguente comando
+### Download it from github releases:
+To install the extension you need to open the `CMD` or` Powershell` and go to the folder where you downloaded the `.VSIX` file, then type and type the following command
 ~~~
 code --install-extension PHP-Utils-X.X.X.vsix
 ~~~
 
+### Download from vs code market
+Search for the extension name
+
 ## Requirements
 
-Nessuno.
+Visual studio code
 
 ## Extension Settings
 
-Nada.
+* `PHP-Utils.getterTemplate`: Template for getter
+* `PHP-Utils.setterTemplate`: Template for setter
+* `PHP-Utils.toStringTemplate`: Template for toString
+* `PHP-Utils.constructTemplate`: Template for construct
+
 
 ## Known Issues
 
-Tutto OK.
+For now none :)
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 1.1.0
+Translated in english for publishing
 
 ### 1.1.0
 
@@ -37,10 +44,10 @@ Users appreciate release notes as you update your extension.
 
 - Issue #2
 
-#### Aggiunte:
+#### Addition:
 
-- Auto indentazione
-- Template
+- Auto indentation
+- Template support
 
 ### 1.0.0
 
@@ -49,14 +56,14 @@ Initial release
 
 ## Template
 
-I template possono essere usati inserenoli nelle cartelle:
-- Linux: `~/.config/Code/User/PHP-Utils`
-- OSX: `~/Library/Application Support/Code/User/PHP-Utils`
-- Windows: `Users\{User}\AppData\Roaming\Code\User\PHP-Utils`
+Templates can be used by placing them in folders:
+- Linux: `~ / .config / Code / User / PHP-Utils`
+- OSX: `~ / Library / Application Support / Code / User / PHP-Utils`
+- Windows: `Users \ {User} \ AppData \ Roaming \ Code \ User \ PHP-Utils`
 
-I template devono essere contenuti in un je `.js`, fatto questo sara necessario andare nelle impostazioni e cercare per `PHP-Utils`, e infine cambiare le impostazioni desiderate.
+The templates must be contained in a je `.js`, after that you will need to go into the settings and search for` PHP-Utils`, and finally change the desired settings.
 
-### Template di default
+### Default template
 
 #### Template getter: 
 ```javascript
@@ -172,17 +179,17 @@ ${string}
 }
 ```
 
-Se volete creare i vostri template sara necessario creare il file `.js` deve avere una struttura di base come mostrato.
+If you want to create your own templates you will need to create the `.js` file which must have a basic structure as shown.
 
 ```javascript
 module.exports = (line) => {
-    //code here
+     // code here
 }
 ```
 
-Cosi si crea una funzione che puo essere importata e usata per creare il template, e per far cio esiste la classe `Line` la cui ha:
-- `getVisibility()` la visibilita dell'attributo [public, private, protected]
-- `getType()` il tipo dell'attributo (se presente) [int, float, string, ...]
-- `getName()` il nome dell'attributo
-- `getNameCamel()` il nome dell'attributo con la prima lettera maiuscola
-- `getSpacing()` la distanza tra l'attributo e il margine sinistro di vs code, serve per l'indentazione automatica
+This creates a function that can be imported and used to create the template, and to do so there is the `Line` class which has:
+- `getVisibility ()` the visibility of the [public, private, protected] attribute
+- `getType ()` the type of the attribute (if any) [int, float, string, ...]
+- `getName ()` the attribute name
+- `getNameCamel ()` the attribute name with the first capital letter
+- `getSpacing ()` the distance between the attribute and the left margin of vs code, used for automatic indentation

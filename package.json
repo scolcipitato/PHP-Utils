@@ -2,16 +2,16 @@
 	"name": "PHP-Utils",
 	"displayName": "PHP Utils",
 	"description": "Generator of various PHP class function",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"publisher": "scolcipitato",
 	"author": "scolcipitato <matteogozzi03@gmail.com>",
 	"icon": "image/icon.png",
 	"repository": {
         "type": "git",
-        "url": "https://git.scolciserver.com/scolcipitato/PHP-Utils"
+        "url": "https://github.com/scolcipitato/PHP-Utils"
     },
 	"bugs": {
-        "url": "https://git.scolciserver.com/scolcipitato/PHP-Utils/-/issues"
+        "url": "https://github.com/scolcipitato/PHP-Utils/issues"
     },
 	"engines": {
 		"vscode": "^1.61.0"
@@ -43,22 +43,22 @@
                 "PHP-Utils.getterTemplate": {
                     "type": "string",
                     "default": "",
-                    "description": "File che fa da template per i getter"
+                    "description": "Template for getter"
                 },
 				"PHP-Utils.setterTemplate": {
                     "type": "string",
                     "default": "",
-                    "description": "File che fa da template per i setter"
+                    "description": "Template for setter"
                 },
 				"PHP-Utils.toStringTemplate": {
                     "type": "string",
                     "default": "",
-                    "description": "File che fa da template per i toString"
+                    "description": "Template for toString"
                 },
 				"PHP-Utils.constructTemplate": {
                     "type": "string",
                     "default": "",
-                    "description": "File che fa da template per i costruttori"
+                    "description": "Template for construct"
                 }
             }
         },

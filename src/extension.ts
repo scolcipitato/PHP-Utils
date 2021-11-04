@@ -24,48 +24,52 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('PHP-Utils.insertPHP__ToString', () => {
-			insert(getToStringTemplate, true);
+			insert(getToStringTemplate);
 	}));
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('PHP-Utils.insertPHP__construct', () => {
-			insert(getConstructTemplate, true);
+			insert(getConstructTemplate);
 	}));
 }
 
 /**
  * 
- * @param fnc di tipo Line o Line[], non andava se lo mettevo nei parametri :) sorry
- * @param molteplicy booleano che indica se passare la funzione al singolo o al molteplice
+ * @param fnc a function with one parameter that must be Lineor Line[]
  */
-function insert(fnc: (line: any) => string, molteplicy: boolean = false) {
+function insert(fnc: (line: any) => string): void {
 	let editor = vscode.window.activeTextEditor;
-	if(editor == null) { showErrorMessage('Errore editor'); return; }
+	if(editor == null) { showErrorMessage('Error with the editor'); return; }
 
 	let lines = fromSelectionToLines(editor);
 	
 	let template: string;
-	if(molteplicy) {
+	try {
 		template = renderMultipleTemplate(lines, fnc);
-	} else {
+	} catch(e) {
 		template = renderSigleTemplate(lines, fnc);
 	}
-	if (!template) { showErrorMessage('Template mancante'); return; }
+	if (!template) { showErrorMessage('Missing template'); return; }
 	try {
 		let closingLine = closingClassLine(editor);
 		editor.edit(function(edit: vscode.TextEditorEdit) {
-				if(closingLine == null) { showErrorMessage('Errore line selector'); return;}
+				if(closingLine == null) { showErrorMessage('Line selector error'); return;}
 				edit.replace(new vscode.Position(closingLine.lineNumber, 0), template);
 		}).then(
-			success => showInformationMessage('Funzione generata con successo.'),
-			error => showErrorMessage('Errore nel generare le funzioni: ' + error)
+			success => showInformationMessage('Function generated successfully.'),
+			error => showErrorMessage('Error while generating functions: ' + error)
 		);
 	} catch(e) {
 		showErrorMessage(String(e));
 	}
 }
 
-function fromSelectionToLines(editor: vscode.TextEditor) {
+/**
+ * From selected line in the editor return the line as Line object
+ * @param editor 
+ * @returns lines: Line[]
+ */
+function fromSelectionToLines(editor: vscode.TextEditor): Line[] {
 	let diff;
 	let lines = [];
 	let txt = [];
@@ -84,35 +88,22 @@ function fromSelectionToLines(editor: vscode.TextEditor) {
 	return lines;
 }
 
-function renderSigleTemplate(lines: Line[], fnc: (line: Line) => string) {
-	let res = "";
-	for(let line of lines) {
-		res += fnc(line);
-	}
-	return res;
-}
-
-function renderMultipleTemplate(lines: Line[], fnc: (line: Line[]) => string) {
-	return fnc(lines);
-}
-
+/**
+ * Find the last line of your php file
+ */
 function closingClassLine(editor: vscode.TextEditor) {
 	for (let lineNumber = editor.document.lineCount - 1; lineNumber > 0; lineNumber--) {
 		if (editor.document.lineAt(lineNumber).text.trim().startsWith('}')) {
 			return editor.document.lineAt(lineNumber);
 		}
 	}
-	throw new Error("Impossibile trovare la linea per inserire il testo");
+	throw new Error("Impossible finding the line for inserting text");
 }
 
-function showErrorMessage(msg: string) {
-	vscode.window.showErrorMessage("PHP Utils: " + msg);
-}
 
-function showInformationMessage(msg: string) {
-	vscode.window.showInformationMessage("PHP Utils: " + msg);
-}
-
+/**
+ * Class that store information on the arribute of a class
+ */
 class Line {
 	visibility: string;
 	type: string;
@@ -126,7 +117,7 @@ class Line {
 		if(vis.indexOf(sepLine[0]) >= 0) {
 			this.visibility = vis[vis.indexOf(sepLine[0])];
 		} else {
-			throw new Error('La riga selezionata non e\' un\'attributo di una classe');
+			throw new Error('The selected line is not an attribute of a class');
 		}
 		if(sepLine[1].match(/^\$/) === null) {
 			this.type = sepLine[1];
@@ -158,6 +149,24 @@ class Line {
 	}
 }
 
+
+/*
+	OUTPUT FUNCTION
+*/
+
+function showErrorMessage(msg: string) {
+	vscode.window.showErrorMessage("PHP Utils: " + msg);
+}
+
+function showInformationMessage(msg: string) {
+	vscode.window.showInformationMessage("PHP Utils: " + msg);
+}
+
+
+/*
+	CUSTOM TEMPLATE FUNCTION
+*/
+
 function templateDefaultDir() {
 	let dir: string;
 	switch(process.platform) {
@@ -171,8 +180,8 @@ function templateDefaultDir() {
 			dir = process.env.APPDATA ? process.env.APPDATA : "";
 			break;
 		default:
-			showErrorMessage("Sistema operativo non supportato");
-			throw new Error("Sistema operativo non supportato");
+			showErrorMessage("OS not supported");
+			throw new Error("OS not supported");
 	}
 	return path.join(dir, 'Code', 'User', 'PHP-Utils');
 
@@ -197,8 +206,8 @@ function createTemplateDir() {
 
 	if(!exists(templateDir)) {
 		fs.mkdir(templateDir, (err) => {
-			showErrorMessage("Qualcosa e' andato storto nella creazione delle directory necessarie al corretto funzionamento");
-			throw new Error("Qualcosa e' andato storto nella creazione delle directory necessarie al corretto funzionamento");
+			showErrorMessage("Something went wrong while creating the needed directory");
+			throw new Error("Something went wrong while creating the needed directory");
 		})
 	}
 }
@@ -207,6 +216,24 @@ function getTemplateFileName(type: string) {
 	let res: string | undefined = vscode.workspace.getConfiguration('PHP-Utils').get(type);
 	return res ? res : "";
 }
+
+
+/*
+	RENDERING FUNCTION
+*/
+
+function renderSigleTemplate(lines: Line[], fnc: (line: Line) => string) {
+	let res = "";
+	for(let line of lines) {
+		res += fnc(line);
+	}
+	return res;
+}
+
+function renderMultipleTemplate(lines: Line[], fnc: (line: Line[]) => string) {
+	return fnc(lines);
+}
+
 
 /*
 	TEMPLATE FUNCTION
