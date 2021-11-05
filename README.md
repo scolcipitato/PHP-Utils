@@ -8,7 +8,7 @@ To generate the methods it is necessary to position yourself on the same line or
 
 ## Installation
 
-### Download it from github releases:
+### Download it from github [releases](https://github.com/scolcipitato/PHP-Utils/releases):
 To install the extension you need to open the `CMD` or` Powershell` and go to the folder where you downloaded the `.VSIX` file, then type and type the following command
 ~~~
 code --install-extension PHP-Utils-X.X.X.vsix
@@ -42,7 +42,7 @@ Translated in english for publishing
 
 #### Fix:
 
-- Issue #2
+- Issue [#2](https://github.com/scolcipitato/PHP-Utils/issues/2)
 
 #### Addition:
 
