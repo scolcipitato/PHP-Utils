@@ -13,6 +13,7 @@
 	"bugs": {
         "url": "https://github.com/scolcipitato/PHP-Utils/issues"
     },
+    "license": "SEE LICENSE IN LICENSE",
 	"engines": {
 		"vscode": "^1.61.0"
 	},
