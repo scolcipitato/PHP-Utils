@@ -35,7 +35,7 @@ For now none :)
 
 ## Release Notes
 
-### 1.1.0
+### 1.1.1
 Translated in english for publishing
 
 ### 1.1.0
