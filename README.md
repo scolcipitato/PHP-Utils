@@ -35,6 +35,10 @@ For now none :)
 
 ## Release Notes
 
+### 1.1.2
+Added thigs for github
+
+
 ### 1.1.1
 Translated in english for publishing
 
