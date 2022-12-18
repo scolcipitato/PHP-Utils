@@ -140,8 +140,15 @@ class Line {
 		return this.name;
 	}
 
+	getNameFirstLetterUpper() {
+		return this.name[0].toUpperCase() + this.name.substring(1);
+	}
+
 	getNameCamel() {
-		return this.name[0].toUpperCase() + this.name.substr(1);
+		return this.getNameFirstLetterUpper().replace(/([_][a-z])/ig, ($1) => {
+			return $1.toUpperCase()
+				.replace('_', '');
+		})
 	}
 
 	getSpacing() {
